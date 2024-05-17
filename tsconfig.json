@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./*",
+    "strict": true,
+    "pretty": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+    // "lib": ["ES2020", "DOM"],
+  },
+  "include": [
+    "/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
