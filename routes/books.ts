@@ -1,6 +1,12 @@
 import express from 'express';
 
-import { getAllBooks, getOneBook, patchBook, postBook, deleteBook } from '../controllers/routes';
+import {
+  getAllBooks,
+  getOneBook,
+  patchBook,
+  postBook,
+  deleteBook
+} from '../controllers/routes';
 
 const router = express.Router();
 

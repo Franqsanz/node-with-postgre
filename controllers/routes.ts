@@ -1,12 +1,18 @@
 import { Request, Response } from 'express';
 
-import pool from '../db';
+import pool from '../db/db';
+import {
+  qyCreateBook,
+  qyAllBooks,
+  qyOneBook,
+  qyPatchBook,
+  qyDeleteBook
+} from '../db/queries';
 
 async function getAllBooks(req: Request, res: Response) {
   try {
-    const result = await pool.query(`SELECT * FROM books ORDER BY id ASC`); // Ejecuta la consulta SELECT en la tabla 'books'
-    // console.log(result.rows)
-    res.json(result.rows); // Devuelve los resultados como JSON
+    const result = await pool.query(qyAllBooks); // Ejecuta la consulta SELECT en la tabla 'books'
+    res.status(200).json(result.rows);
   } catch (err) {
     console.error('Error al ejecutar la consulta', err);
     res.status(500).json({ message: 'Error al obtener los libros' });
@@ -17,7 +23,7 @@ async function getOneBook(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(`SELECT * FROM books WHERE id = $1`, [id]);
+    const result = await pool.query(qyOneBook, [id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
@@ -34,6 +40,7 @@ async function patchBook(req: Request, res: Response) {
   const { id } = req.params;
   const {
     title,
+    author,
     category,
     sourcelink,
     language,
@@ -45,21 +52,10 @@ async function patchBook(req: Request, res: Response) {
   } = req.body;
 
   try {
-    const result = await pool.query(
-      `UPDATE books
-        SET title = $1,
-            category = $2,
-            sourcelink = $3,
-            language = $4,
-            year = $5,
-            numberpages = $6,
-            format = $7,
-            pathurl = $8,
-            image = $9
-        WHERE id = $10
-        RETURNING *`,
+    const result = await pool.query(qyPatchBook,
       [
         title,
+        author,
         category,
         sourcelink,
         language,
@@ -84,39 +80,38 @@ async function patchBook(req: Request, res: Response) {
 }
 
 async function postBook(req: Request, res: Response) {
+  const {
+    title,
+    author,
+    category,
+    sourcelink,
+    language,
+    year,
+    numberpages,
+    format,
+    pathurl,
+    image
+  } = req.body;
+
   try {
-    const result = await pool.query(
-      `INSERT INTO books (
-        title,
-        category,
-        sourcelink,
-        language,
-        year,
-        numberpages,
-        format,
-        pathurl,
-        image
-      )
-      VALUES (
-        'DUNE',
-        '{"Ciencia Ficción"}',
-        'https://xbu.vercel.app/book/view/dune-adZC',
-        'Español',
-        2020,
-        784,
-        'Físico',
-        'dune-adZC',
-        '{
-          "url": "https://res.cloudinary.com/xbu/image/upload/v1678705521/xbu/a5x8ms35xwbdpry1gb8w.webp",
-          "public_id": "xbu/a5x8ms35xwbdpry1gb8w"
-        }'
-      )`
-    );
-    // console.log(result)
+    const values = [
+      title,
+      author,
+      category,
+      sourcelink,
+      language,
+      year,
+      numberpages,
+      format,
+      pathurl,
+      image
+    ];
+
+    const result = await pool.query(qyCreateBook, values);
     res.status(200).json(result.rowCount);
   } catch (err) {
     console.error('Error al crear un nuevo libro', err);
-    // res.status(500).json({ message: 'Error al crear un nuevo libro' });
+    res.status(500).json({ message: 'Error al crear un nuevo libro' });
   }
 }
 
@@ -124,10 +119,7 @@ async function deleteBook(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(
-      `DELETE FROM books WHERE id = $1 RETURNING *`,
-      [id]
-    );
+    const result = await pool.query(qyDeleteBook, [id]);
 
     if (result.rowCount === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
@@ -140,4 +132,10 @@ async function deleteBook(req: Request, res: Response) {
   }
 }
 
-export { getAllBooks, getOneBook, patchBook, postBook, deleteBook }
+export {
+  getAllBooks,
+  getOneBook,
+  patchBook,
+  postBook,
+  deleteBook
+}
