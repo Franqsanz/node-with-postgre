@@ -75,27 +75,29 @@ async function patchBook(req: Request, res: Response) {
   const { id } = req.params;
   const {
     title,
-    author,
+    authors,
+    synopsis,
     category,
-    sourcelink,
+    source_link,
     language,
     year,
-    numberpages,
+    number_pages,
     format,
-    pathurl,
+    slug,
     image
   } = req.body;
 
   const values = [
     title,
-    author,
+    authors,
+    synopsis,
     category,
-    sourcelink,
+    source_link,
     language,
     year,
-    numberpages,
+    number_pages,
     format,
-    pathurl,
+    slug,
     image,
     id
   ];
@@ -117,27 +119,29 @@ async function patchBook(req: Request, res: Response) {
 async function postBook(req: Request, res: Response) {
   const {
     title,
-    author,
+    authors,
+    synopsis,
     category,
-    sourcelink,
+    source_link,
     language,
     year,
-    numberpages,
+    number_pages,
     format,
-    pathurl,
+    slug,
     image
   } = req.body;
 
   const values = [
     title,
-    author,
+    authors,
+    synopsis,
     category,
-    sourcelink,
+    source_link,
     language,
     year,
-    numberpages,
+    number_pages,
     format,
-    pathurl,
+    slug,
     image
   ];
 

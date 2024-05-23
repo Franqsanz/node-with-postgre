@@ -1,10 +1,10 @@
-// Leer todos los libros ordenados en forma ascendente.
-const qyAllBooks = `SELECT * FROM books ORDER BY id DESC`;
+// Leer todos los libros ordenados en forma descendente.
+const qyAllBooks = `SELECT * FROM books ORDER BY created_at DESC`;
 // Todos los libros más el total
 const qyAllBooksMoreTotal = `WITH total_count AS (
-  SELECT COUNT(*) AS total FROM books),
+  SELECT COUNT(*)::integer AS total FROM books),
   result_set AS (
-    SELECT * FROM books ORDER BY id DESC
+    SELECT * FROM books ORDER BY created_at DESC
   )
   SELECT (SELECT total FROM total_count) AS total,
   json_agg(result_set.*) AS result
@@ -17,39 +17,41 @@ const qyDeleteBook = `DELETE FROM books WHERE id = $1 RETURNING *`;
 // Crear un nuevo libro.
 const qyCreateBook = `INSERT INTO books (
     title,
-    author,
+    authors,
+    synopsis,
     category,
-    sourcelink,
+    source_link,
     language,
     year,
-    numberpages,
+    number_pages,
     format,
-    pathurl,
+    slug,
     image
   )
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   RETURNING *;
 `;
 // Actualizar un libro.
 const qyPatchBook = `UPDATE books SET
     title = $1,
-    author = $2,
-    category = $3,
-    sourcelink = $4,
-    language = $5,
-    year = $6,
-    numberpages = $7,
-    format = $8,
-    pathurl = $9,
-    image = $10
-  WHERE id = $11
+    authors = $2,
+    synopsis= $3,
+    category = $4,
+    source_link = $5,
+    language = $6,
+    year = $7,
+    number_Pages = $8,
+    format = $9,
+    slug = $10,
+    image = $11
+  WHERE id = $12
   RETURNING *
 `;
 // Buscar/filtar campo
 const qySearchByField = `SELECT * FROM books WHERE title ILIKE $1`;
 // Buscar/filtar varios campos
 const qySearchByFields = `SELECT * FROM books WHERE title ILIKE $1 OR author ILIKE $2`;
-// Agrupar varios campos, esta consulta es compleja
+// Agrupar varios campos, esta consulta es compleja (por ahora)
 const qyGroupFields = `SELECT field,
     json_agg(json_build_object('value', values, 'count', count)) AS values
   FROM (
