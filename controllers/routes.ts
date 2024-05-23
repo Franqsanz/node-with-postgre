@@ -4,14 +4,17 @@ import pool from '../db/db';
 import {
   qyCreateBook,
   qyAllBooks,
+  qyAllBooksMoreTotal,
   qyOneBook,
   qyPatchBook,
-  qyDeleteBook
+  qyDeleteBook,
+  qySearchByField,
+  qyGroupFields
 } from '../db/queries';
 
 async function getAllBooks(req: Request, res: Response) {
   try {
-    const result = await pool.query(qyAllBooks); // Ejecuta la consulta SELECT en la tabla 'books'
+    const result = await pool.query(qyAllBooksMoreTotal); // Ejecuta la consulta SELECT en la tabla 'books'
     res.status(200).json(result.rows);
   } catch (err) {
     console.error('Error al ejecutar la consulta', err);
@@ -36,6 +39,38 @@ async function getOneBook(req: Request, res: Response) {
   }
 }
 
+async function getSearchBook(req: Request, res: Response) {
+  const { title } = req.query;
+
+  try {
+    const result = await pool.query(qySearchByField, [`%${title}%`]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Libro no encontrado' });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Error al leer un libro', err);
+    res.status(500).json({ message: 'Error al leer un libro' });
+  }
+}
+
+async function getGroupFields(req: Request, res: Response) {
+  try {
+    const result = await pool.query(qyGroupFields);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Libro no encontrado' });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Error al leer un libro', err);
+    res.status(500).json({ message: 'Error al leer un libro' });
+  }
+}
+
 async function patchBook(req: Request, res: Response) {
   const { id } = req.params;
   const {
@@ -51,22 +86,22 @@ async function patchBook(req: Request, res: Response) {
     image
   } = req.body;
 
+  const values = [
+    title,
+    author,
+    category,
+    sourcelink,
+    language,
+    year,
+    numberpages,
+    format,
+    pathurl,
+    image,
+    id
+  ];
+
   try {
-    const result = await pool.query(qyPatchBook,
-      [
-        title,
-        author,
-        category,
-        sourcelink,
-        language,
-        year,
-        numberpages,
-        format,
-        pathurl,
-        image,
-        id
-      ]
-    );
+    const result = await pool.query(qyPatchBook, values);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
@@ -93,20 +128,20 @@ async function postBook(req: Request, res: Response) {
     image
   } = req.body;
 
-  try {
-    const values = [
-      title,
-      author,
-      category,
-      sourcelink,
-      language,
-      year,
-      numberpages,
-      format,
-      pathurl,
-      image
-    ];
+  const values = [
+    title,
+    author,
+    category,
+    sourcelink,
+    language,
+    year,
+    numberpages,
+    format,
+    pathurl,
+    image
+  ];
 
+  try {
     const result = await pool.query(qyCreateBook, values);
     res.status(200).json(result.rowCount);
   } catch (err) {
@@ -137,5 +172,7 @@ export {
   getOneBook,
   patchBook,
   postBook,
-  deleteBook
+  deleteBook,
+  getSearchBook,
+  getGroupFields
 }

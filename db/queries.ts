@@ -1,5 +1,15 @@
 // Leer todos los libros ordenados en forma ascendente.
-const qyAllBooks = `SELECT * FROM books ORDER BY id ASC`;
+const qyAllBooks = `SELECT * FROM books ORDER BY id DESC`;
+// Todos los libros más el total
+const qyAllBooksMoreTotal = `WITH total_count AS (
+  SELECT COUNT(*) AS total FROM books),
+  result_set AS (
+    SELECT * FROM books ORDER BY id DESC
+  )
+  SELECT (SELECT total FROM total_count) AS total,
+  json_agg(result_set.*) AS result
+  FROM result_set;
+`;
 // Leer un solo libro por ID.
 const qyOneBook = `SELECT * FROM books WHERE id = $1`;
 // Borrar un libro por ID.
@@ -35,11 +45,45 @@ const qyPatchBook = `UPDATE books SET
   WHERE id = $11
   RETURNING *
 `;
+// Buscar/filtar campo
+const qySearchByField = `SELECT * FROM books WHERE title ILIKE $1`;
+// Buscar/filtar varios campos
+const qySearchByFields = `SELECT * FROM books WHERE title ILIKE $1 OR author ILIKE $2`;
+// Agrupar varios campos, esta consulta es compleja
+const qyGroupFields = `SELECT field,
+    json_agg(json_build_object('value', values, 'count', count)) AS values
+  FROM (
+    SELECT 'category' AS field, UNNEST(category) AS values, COUNT(*) AS count
+    FROM books
+    GROUP BY category
+
+    UNION ALL
+
+    SELECT 'language' AS field, language AS values, COUNT(*) AS count
+    FROM books
+    GROUP BY language
+
+    UNION ALL
+
+    SELECT 'year' AS field, year::text AS values, COUNT(*) AS count
+    FROM books
+    GROUP BY year
+  ) AS all_groups
+  GROUP BY field
+  ORDER BY field;
+`;
+// Consultar el total de registros
+const qyTotalCount = `SELECT COUNT(*) AS total_count FROM books`;
 
 export {
   qyCreateBook,
   qyAllBooks,
+  qyAllBooksMoreTotal,
   qyOneBook,
   qyPatchBook,
-  qyDeleteBook
+  qyDeleteBook,
+  qySearchByField,
+  qySearchByFields,
+  qyGroupFields,
+  qyTotalCount
 }
