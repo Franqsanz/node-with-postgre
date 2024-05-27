@@ -55,9 +55,12 @@ const qySearchByFields = `SELECT * FROM books WHERE title ILIKE $1 OR author ILI
 const qyGroupFields = `SELECT field,
     json_agg(json_build_object('value', values, 'count', count)) AS values
   FROM (
-    SELECT 'category' AS field, UNNEST(category) AS values, COUNT(*) AS count
-    FROM books
-    GROUP BY category
+    SELECT 'category' AS field, values, COUNT(*) AS count
+    FROM (
+      SELECT UNNEST(category) AS values
+      FROM books
+    ) AS unnested_categories
+    GROUP BY values
 
     UNION ALL
 
