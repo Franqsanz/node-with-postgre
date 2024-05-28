@@ -4,14 +4,25 @@ const qyAllBooks = `SELECT * FROM books ORDER BY created_at DESC`;
 const qyAllBooksMoreTotal = `WITH total_count AS (
   SELECT COUNT(*)::integer AS total FROM books),
   result_set AS (
-    SELECT * FROM books ORDER BY created_at DESC
+    SELECT
+      id,
+      title,
+      category,
+      image,
+      language,
+      slug,
+      authors
+    FROM books
+    ORDER BY created_at DESC
   )
   SELECT (SELECT total FROM total_count) AS total,
-  json_agg(result_set.*) AS result
+  json_agg(result_set.*) AS results
   FROM result_set;
 `;
 // Leer un solo libro por ID.
 const qyOneBook = `SELECT * FROM books WHERE id = $1`;
+// Leer un solo libro por Slug.
+const qyOneBookBySlug = `SELECT * FROM books WHERE slug = $1`;
 // Borrar un libro por ID.
 const qyDeleteBook = `DELETE FROM books WHERE id = $1 RETURNING *`;
 // Crear un nuevo libro.
@@ -85,6 +96,7 @@ export {
   qyAllBooks,
   qyAllBooksMoreTotal,
   qyOneBook,
+  qyOneBookBySlug,
   qyPatchBook,
   qyDeleteBook,
   qySearchByField,

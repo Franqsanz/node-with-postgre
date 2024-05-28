@@ -6,6 +6,7 @@ import {
   qyAllBooks,
   qyAllBooksMoreTotal,
   qyOneBook,
+  qyOneBookBySlug,
   qyPatchBook,
   qyDeleteBook,
   qySearchByField,
@@ -27,6 +28,23 @@ async function getOneBook(req: Request, res: Response) {
 
   try {
     const result = await pool.query(qyOneBook, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Libro no encontrado' });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error al leer un libro', err);
+    res.status(500).json({ message: 'Error al leer un libro' });
+  }
+}
+
+async function getOneBookBySlug(req: Request, res: Response) {
+  const { slug } = req.params;
+
+  try {
+    const result = await pool.query(qyOneBookBySlug, [slug]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
@@ -174,6 +192,7 @@ async function deleteBook(req: Request, res: Response) {
 export {
   getAllBooks,
   getOneBook,
+  getOneBookBySlug,
   patchBook,
   postBook,
   deleteBook,
