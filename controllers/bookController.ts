@@ -3,25 +3,70 @@ import { Request, Response } from 'express';
 import pool from '../db/db';
 import {
   qyCreateBook,
-  qyAllBooks,
   qyAllBooksMoreTotal,
   qyOneBook,
   qyOneBookBySlug,
   qyPatchBook,
   qyDeleteBook,
+  qyPaginateBook,
   qySearchByField,
-  qyGroupFields
+  qyGroupFields,
+  qyTotalCount,
 } from '../db/queries';
 
 async function getAllBooks(req: Request, res: Response) {
+  const limit = req.query.limit ? parseInt(req.query.limit as string) : null;
+  const page = req.query.page ? parseInt(req.query.page as string) : 1;
+  const offset = limit ? (page - 1) * limit : 0;
+
+  let results;
+
   try {
-    const result = await pool.query(qyAllBooksMoreTotal); // Ejecuta la consulta SELECT en la tabla 'books'
-    res.status(200).json(result.rows);
+    const query = {
+      text: qyPaginateBook,
+      values: [limit, offset],
+    };
+
+    if (limit === null) {
+      results = await pool.query(qyAllBooksMoreTotal);
+
+      res.status(200).json(results.rows);
+    } else {
+      results = await pool.query(query);
+      const totalResultsQuery = await pool.query(qyTotalCount);
+
+      const totalResults = parseInt(totalResultsQuery.rows[0].count, 10);
+      const totalPages = Math.ceil(totalResults / limit);
+      const nextPage = page < totalPages ? page + 1 : null;
+
+      if (results.rows.length < 1) {
+        return res.status(404).json({ info: { message: 'No se encontraron más libros' } });
+      }
+
+      res.status(200).json({
+        page: page,
+        limit: limit,
+        totalResults,
+        totalPages,
+        nextPage,
+        data: results.rows,
+      });
+    }
   } catch (err) {
     console.error('Error al ejecutar la consulta', err);
     res.status(500).json({ message: 'Error al obtener los libros' });
   }
 }
+
+// async function getAllBooks(req: Request, res: Response) {
+//   try {
+//     const result = await pool.query(qyAllBooksMoreTotal); // Ejecuta la consulta SELECT en la tabla 'books'
+//     res.status(200).json(result.rows);
+//   } catch (err) {
+//     console.error('Error al ejecutar la consulta', err);
+//     res.status(500).json({ message: 'Error al obtener los libros' });
+//   }
+// }
 
 async function getOneBook(req: Request, res: Response) {
   const { id } = req.params;

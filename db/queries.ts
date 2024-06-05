@@ -25,6 +25,8 @@ const qyOneBook = `SELECT * FROM books WHERE id = $1`;
 const qyOneBookBySlug = `SELECT * FROM books WHERE slug = $1`;
 // Borrar un libro por ID.
 const qyDeleteBook = `DELETE FROM books WHERE id = $1 RETURNING *`;
+// Paginación.
+const qyPaginateBook = `SELECT * FROM books LIMIT $1 OFFSET $2`;
 // Crear un nuevo libro.
 const qyCreateBook = `INSERT INTO books (
     title,
@@ -89,7 +91,7 @@ const qyGroupFields = `SELECT field,
   ORDER BY field;
 `;
 // Consultar el total de registros
-const qyTotalCount = `SELECT COUNT(*) AS total_count FROM books`;
+const qyTotalCount = `SELECT COUNT(*) FROM books`;
 
 export {
   qyCreateBook,
@@ -99,6 +101,7 @@ export {
   qyOneBookBySlug,
   qyPatchBook,
   qyDeleteBook,
+  qyPaginateBook,
   qySearchByField,
   qySearchByFields,
   qyGroupFields,
