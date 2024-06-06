@@ -92,6 +92,12 @@ const qyGroupFields = `SELECT field,
 `;
 // Consultar el total de registros
 const qyTotalCount = `SELECT COUNT(*) FROM books`;
+// Filtrar por multiples campos
+// `1=1` es una condición que siempre es verdadera.
+// Esto simplifica la construcción de la consulta dinámica,
+// permitiendo que las condiciones adicionales se agreguen fácilmente
+// con `AND` sin preocuparse por si hay una condición previa.
+const qyFilter = `SELECT image, title, authors, category, language, year, slug FROM books WHERE 1=1`;
 
 export {
   qyCreateBook,
@@ -105,5 +111,6 @@ export {
   qySearchByField,
   qySearchByFields,
   qyGroupFields,
-  qyTotalCount
+  qyTotalCount,
+  qyFilter
 }

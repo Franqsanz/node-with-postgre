@@ -10,10 +10,11 @@ import {
   getSearchBook,
   getGroupFields
 } from '../controllers/bookController';
+import { query } from '../middleware/query';
 
 const router = express.Router();
 
-router.get('/books', getAllBooks);
+router.get('/books', query, getAllBooks);
 router.get('/books/search', getSearchBook);
 router.get('/books/group', getGroupFields);
 router.get('/book/:id', getOneBook);
