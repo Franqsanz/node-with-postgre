@@ -1,55 +1,45 @@
 import { Request, Response } from 'express';
 
-import pool from '../db/db';
-import {
-  qyCreateBook,
-  qyAllBooksMoreTotal,
-  qyOneBook,
-  qyOneBookBySlug,
-  qyPatchBook,
-  qyDeleteBook,
-  qyPaginateBook,
-  qySearchByField,
-  qyGroupFields,
-  qyTotalCount,
-} from '../db/queries';
+// import pool from '../../db/connection';
+// import {
+//   qyCreateBook,
+//   qyAllBooksMoreTotal,
+//   qyOneBook,
+//   qyOneBookBySlug,
+//   qyPatchBook,
+//   qyDeleteBook,
+//   qyPaginateBook,
+//   qySearchByField,
+//   qyGroupFields,
+//   qyTotalCount,
+// } from '../../db/queries';
+import { BookModel } from '../../model/bookModel';
 
 async function getAllBooks(req: Request, res: Response) {
   const limit = req.query.limit ? parseInt(req.query.limit as string) : null;
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
   const offset = limit ? (page - 1) * limit : 0;
 
-  let results;
-
   try {
-    const query = {
-      text: qyPaginateBook,
-      values: [limit, offset],
-    };
+    const { rows, totalResults } = await BookModel.getAllBooks(limit, offset);
 
     if (limit === null) {
-      results = await pool.query(qyAllBooksMoreTotal);
-
-      res.status(200).json(results.rows);
+      return res.status(200).json(rows);
     } else {
-      results = await pool.query(query);
-      const totalResultsQuery = await pool.query(qyTotalCount);
-
-      const totalResults = parseInt(totalResultsQuery.rows[0].count, 10);
-      const totalPages = Math.ceil(totalResults / limit);
+      const totalPages = Math.ceil(totalResults as number / limit);
       const nextPage = page < totalPages ? page + 1 : null;
 
-      if (results.rows.length < 1) {
+      if (rows.length < 1) {
         return res.status(404).json({ info: { message: 'No se encontraron más libros' } });
       }
 
       res.status(200).json({
-        page: page,
-        limit: limit,
+        page,
+        limit,
         totalResults,
         totalPages,
         nextPage,
-        data: results.rows,
+        data: rows,
       });
     }
   } catch (err) {
@@ -58,27 +48,17 @@ async function getAllBooks(req: Request, res: Response) {
   }
 }
 
-// async function getAllBooks(req: Request, res: Response) {
-//   try {
-//     const result = await pool.query(qyAllBooksMoreTotal); // Ejecuta la consulta SELECT en la tabla 'books'
-//     res.status(200).json(result.rows);
-//   } catch (err) {
-//     console.error('Error al ejecutar la consulta', err);
-//     res.status(500).json({ message: 'Error al obtener los libros' });
-//   }
-// }
-
 async function getOneBook(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(qyOneBook, [id]);
+    const result = await BookModel.getOneBook(id);
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result.rows[0]);
+    res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
@@ -89,13 +69,13 @@ async function getOneBookBySlug(req: Request, res: Response) {
   const { slug } = req.params;
 
   try {
-    const result = await pool.query(qyOneBookBySlug, [slug]);
+    const result = await BookModel.getOneBookBySlug(slug);
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result.rows[0]);
+    res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
@@ -106,13 +86,13 @@ async function getSearchBook(req: Request, res: Response) {
   const { title } = req.query;
 
   try {
-    const result = await pool.query(qySearchByField, [`%${title}%`]);
+    const result = await BookModel.getSearchBook(title as string);
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result.rows);
+    res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
@@ -121,13 +101,13 @@ async function getSearchBook(req: Request, res: Response) {
 
 async function getGroupFields(req: Request, res: Response) {
   try {
-    const result = await pool.query(qyGroupFields);
+    const result = await BookModel.getGroupFields();
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result.rows);
+    res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
@@ -166,13 +146,14 @@ async function patchBook(req: Request, res: Response) {
   ];
 
   try {
-    const result = await pool.query(qyPatchBook, values);
+    // const result = await pool.query(qyPatchBook, values);
+    const result = await BookModel.updateBook(values);
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result.rows[0]);
+    res.status(200).json(result);
   } catch (err) {
     console.error('Error al actualizar el libro', err);
     res.status(500).json({ message: 'Error al actualizar el libro' });
@@ -209,8 +190,10 @@ async function postBook(req: Request, res: Response) {
   ];
 
   try {
-    const result = await pool.query(qyCreateBook, values);
-    res.status(200).json(result.rowCount);
+    // const result = await pool.query(qyCreateBook, values);
+    const result = await BookModel.createBook(values);
+
+    res.status(200).json(result);
   } catch (err) {
     console.error('Error al crear un nuevo libro', err);
     res.status(500).json({ message: 'Error al crear un nuevo libro' });
@@ -221,13 +204,14 @@ async function deleteBook(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(qyDeleteBook, [id]);
+    // const result = await pool.query(qyDeleteBook, [id]);
+    const result = await BookModel.deleteBook(id);
 
-    if (result.rowCount === 0) {
+    if (result === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json({ message: 'Libro eliminado correctamente', book: result.rows[0] });
+    res.status(200).json({ message: 'Libro eliminado correctamente', book: result });
   } catch (err) {
     console.error('Error al eliminar el libro', err);
     res.status(500).json({ message: 'Error al eliminar el libro' });

@@ -1,12 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 
-import pool from '../db/db';
-import { qyFilter } from '../db/queries';
+import pool from '../../db/connection';
+import { qyFilter } from '../../db/queries';
 
 export async function query(req: Request, res: Response, next: NextFunction) {
   const { category, year, language } = req.query;
   const queryParams: any[] = [];
   let queryStr = qyFilter;
+
+  if (!category && !year && !language) {
+    // Si no hay filtros, pasa al siguiente middleware/controlador
+    return next();
+  }
 
   try {
     if (category) {
@@ -37,6 +42,4 @@ export async function query(req: Request, res: Response, next: NextFunction) {
     console.log(err);
     res.status(500).json({ error: { message: 'Error en el servidor' } });
   }
-
-  next();
 };

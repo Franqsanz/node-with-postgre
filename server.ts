@@ -2,7 +2,7 @@ import express from 'express';
 import compression from 'compression';
 import { config } from 'dotenv';
 
-import books from './routes/books';
+import books from './api/routes/books';
 
 const app = express();
 const port = process.env.PORT || 6985;

@@ -97,7 +97,7 @@ const qyTotalCount = `SELECT COUNT(*) FROM books`;
 // Esto simplifica la construcción de la consulta dinámica,
 // permitiendo que las condiciones adicionales se agreguen fácilmente
 // con `AND` sin preocuparse por si hay una condición previa.
-const qyFilter = `SELECT image, title, authors, category, language, year, slug FROM books WHERE 1=1`;
+const qyFilter = `SELECT id, image, title, authors, category, language, year, slug FROM books WHERE 1=1`;
 
 export {
   qyCreateBook,
