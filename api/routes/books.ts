@@ -4,9 +4,9 @@ import {
   getAllBooks,
   getOneBook,
   getOneBookBySlug,
-  patchBook,
-  postBook,
-  deleteBook,
+  updateBook,
+  addBook,
+  removeBook,
   getSearchBook,
   getGroupFields
 } from '../controllers/bookController';
@@ -19,8 +19,8 @@ router.get('/books/search', getSearchBook);
 router.get('/books/group', getGroupFields);
 router.get('/book/:id', getOneBook);
 router.get('/book/slug/:slug', getOneBookBySlug);
-router.patch('/update/book/:id', patchBook);
-router.post('/post/book', postBook);
-router.delete('/delete/book/:id', deleteBook);
+router.patch('/update/book/:id', updateBook);
+router.post('/post/book', addBook);
+router.delete('/delete/book/:id', removeBook);
 
 export default router;

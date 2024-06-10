@@ -13,7 +13,7 @@ import {
 } from '../db/queries';
 
 export const BookModel = {
-  getAllBooks: async (limit: number | null, offset: number) => {
+  findAllBooks: async (limit: number | null, offset: number) => {
     try {
       const query = {
         text: qyPaginateBook,
@@ -22,12 +22,13 @@ export const BookModel = {
 
       if (limit === null) {
         const results = await pool.query(qyAllBooksMoreTotal);
+
         return { rows: results.rows };
       } else {
         const results = await pool.query(query);
-
         const totalResultsQuery = await pool.query(qyTotalCount);
         const totalResults = parseInt(totalResultsQuery.rows[0].count, 10);
+
         return { rows: results.rows, totalResults };
       }
     } catch (err) {
@@ -36,13 +37,13 @@ export const BookModel = {
     }
   },
 
-  getOneBook: async (id: string) => {
+  findById: async (id: string) => {
     try {
       const result = await pool.query(qyOneBook, [id]);
 
-      if (result.rows.length === 0) {
-        throw new Error('Libro no encontrado');
-      }
+      // if (result.rows.length === 0) {
+      //   throw new Error('Libro no encontrado');
+      // }
 
       return result.rows[0];
     } catch (err) {
@@ -51,13 +52,13 @@ export const BookModel = {
     }
   },
 
-  getOneBookBySlug: async (slug: string) => {
+  findBySlug: async (slug: string) => {
     try {
       const result = await pool.query(qyOneBookBySlug, [slug]);
 
-      if (result.rows.length === 0) {
-        throw new Error('Libro no encontrado');
-      }
+      // if (result.rows.length === 0) {
+      //   throw new Error('Libro no encontrado');
+      // }
 
       return result.rows[0];
     } catch (err) {
@@ -66,28 +67,13 @@ export const BookModel = {
     }
   },
 
-  getSearchBook: async (title: string | string[] | undefined) => {
+  findSearch: async (title: string | string[] | undefined) => {
     try {
       const result = await pool.query(qySearchByField, [`%${title}%`]);
 
-      if (result.rows.length === 0) {
-        throw new Error('Libro no encontrado');
-      }
-
-      return result.rows[0];
-    } catch (err) {
-      console.error('Error al leer un libro en el modelo', err);
-      throw err;
-    }
-  },
-
-  getGroupFields: async () => {
-    try {
-      const result = await pool.query(qyGroupFields);
-
-      if (result.rows.length === 0) {
-        throw new Error('Libro no encontrado');
-      }
+      // if (result.rows.length === 0) {
+      //   throw new Error('Libro no encontrado');
+      // }
 
       return result.rows;
     } catch (err) {
@@ -96,13 +82,28 @@ export const BookModel = {
     }
   },
 
-  updateBook: async (values: any[]) => {
+  findByGroupFields: async () => {
+    try {
+      const result = await pool.query(qyGroupFields);
+
+      // if (result.rows.length === 0) {
+      //   throw new Error('Grupos no encontrados');
+      // }
+
+      return result.rows;
+    } catch (err) {
+      console.error('Error al leer los grupos en el modelo', err);
+      throw err;
+    }
+  },
+
+  findUpdateBook: async (values: any[]) => {
     try {
       const result = await pool.query(qyPatchBook, values);
 
-      if (result.rows.length === 0) {
-        throw new Error('Libro no encontrado');
-      }
+      // if (result.rows.length === 0) {
+      //   throw new Error('Libro no encontrado');
+      // }
 
       return result.rows;
     } catch (err) {
@@ -126,9 +127,9 @@ export const BookModel = {
     try {
       const result = await pool.query(qyDeleteBook, [id]);
 
-      if (result.rowCount === 0) {
-        throw new Error('Libro no encontrado');
-      }
+      // if (result.rowCount === 0) {
+      //   throw new Error('Libro no encontrado');
+      // }
 
       return result.rows[0];
     } catch (err) {

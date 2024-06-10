@@ -1,19 +1,17 @@
 import { Request, Response } from 'express';
 
-// import pool from '../../db/connection';
-// import {
-//   qyCreateBook,
-//   qyAllBooksMoreTotal,
-//   qyOneBook,
-//   qyOneBookBySlug,
-//   qyPatchBook,
-//   qyDeleteBook,
-//   qyPaginateBook,
-//   qySearchByField,
-//   qyGroupFields,
-//   qyTotalCount,
-// } from '../../db/queries';
-import { BookModel } from '../../model/bookModel';
+import { BookService } from '../../services/bookService';
+
+const {
+  findAllBooks,
+  findById,
+  findBySlug,
+  findSearch,
+  findByGroupFields,
+  findUpdateBook,
+  createBook,
+  deleteBook
+} = BookService;
 
 async function getAllBooks(req: Request, res: Response) {
   const limit = req.query.limit ? parseInt(req.query.limit as string) : null;
@@ -21,7 +19,7 @@ async function getAllBooks(req: Request, res: Response) {
   const offset = limit ? (page - 1) * limit : 0;
 
   try {
-    const { rows, totalResults } = await BookModel.getAllBooks(limit, offset);
+    const { rows, totalResults } = await findAllBooks(limit, offset);
 
     if (limit === null) {
       return res.status(200).json(rows);
@@ -33,7 +31,7 @@ async function getAllBooks(req: Request, res: Response) {
         return res.status(404).json({ info: { message: 'No se encontraron más libros' } });
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         page,
         limit,
         totalResults,
@@ -52,13 +50,13 @@ async function getOneBook(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const result = await BookModel.getOneBook(id);
+    const result = await findById(id);
 
     if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
@@ -69,13 +67,13 @@ async function getOneBookBySlug(req: Request, res: Response) {
   const { slug } = req.params;
 
   try {
-    const result = await BookModel.getOneBookBySlug(slug);
+    const result = await findBySlug(slug);
 
     if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
@@ -86,13 +84,13 @@ async function getSearchBook(req: Request, res: Response) {
   const { title } = req.query;
 
   try {
-    const result = await BookModel.getSearchBook(title as string);
+    const result = await findSearch(title as string);
 
     if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
@@ -101,20 +99,20 @@ async function getSearchBook(req: Request, res: Response) {
 
 async function getGroupFields(req: Request, res: Response) {
   try {
-    const result = await BookModel.getGroupFields();
+    const result = await findByGroupFields();
 
     if (result.length === 0) {
-      return res.status(404).json({ message: 'Libro no encontrado' });
+      return res.status(404).json({ message: 'Grupos no encontrados' });
     }
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Error al leer un libro', err);
     res.status(500).json({ message: 'Error al leer un libro' });
   }
 }
 
-async function patchBook(req: Request, res: Response) {
+async function updateBook(req: Request, res: Response) {
   const { id } = req.params;
   const {
     title,
@@ -146,21 +144,20 @@ async function patchBook(req: Request, res: Response) {
   ];
 
   try {
-    // const result = await pool.query(qyPatchBook, values);
-    const result = await BookModel.updateBook(values);
+    const result = await findUpdateBook(values);
 
     if (result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Error al actualizar el libro', err);
     res.status(500).json({ message: 'Error al actualizar el libro' });
   }
 }
 
-async function postBook(req: Request, res: Response) {
+async function addBook(req: Request, res: Response) {
   const {
     title,
     authors,
@@ -190,28 +187,26 @@ async function postBook(req: Request, res: Response) {
   ];
 
   try {
-    // const result = await pool.query(qyCreateBook, values);
-    const result = await BookModel.createBook(values);
+    const result = await createBook(values);
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Error al crear un nuevo libro', err);
     res.status(500).json({ message: 'Error al crear un nuevo libro' });
   }
 }
 
-async function deleteBook(req: Request, res: Response) {
+async function removeBook(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    // const result = await pool.query(qyDeleteBook, [id]);
-    const result = await BookModel.deleteBook(id);
+    const result = await deleteBook(id);
 
     if (result === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
-    res.status(200).json({ message: 'Libro eliminado correctamente', book: result });
+    return res.status(200).json({ message: 'Libro eliminado correctamente', book: result });
   } catch (err) {
     console.error('Error al eliminar el libro', err);
     res.status(500).json({ message: 'Error al eliminar el libro' });
@@ -222,9 +217,9 @@ export {
   getAllBooks,
   getOneBook,
   getOneBookBySlug,
-  patchBook,
-  postBook,
-  deleteBook,
+  updateBook,
+  addBook,
+  removeBook,
   getSearchBook,
   getGroupFields
 }
