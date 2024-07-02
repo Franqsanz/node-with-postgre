@@ -17,10 +17,10 @@ const router = express.Router();
 router.get('/books', query, getAllBooks);
 router.get('/books/search', getSearchBook);
 router.get('/books/group', getGroupFields);
-router.get('/book/:id', getOneBook);
-router.get('/book/slug/:slug', getOneBookBySlug);
-router.patch('/update/book/:id', updateBook);
-router.post('/post/book', addBook);
-router.delete('/delete/book/:id', removeBook);
+router.get('/books/:id', getOneBook);
+router.get('/books/slug/:slug', getOneBookBySlug);
+router.patch('/books/:id', updateBook);
+router.post('/books', addBook);
+router.delete('/books/:id', removeBook);
 
 export default router;

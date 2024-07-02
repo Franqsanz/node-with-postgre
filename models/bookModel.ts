@@ -1,4 +1,5 @@
 import pool from '../db/connection';
+import { IBook, IRows } from '../types/IBook';
 import {
   qyCreateBook,
   qyAllBooksMoreTotal,
@@ -13,7 +14,7 @@ import {
 } from '../db/queries';
 
 export const BookModel = {
-  findAllBooks: async (limit: number | null, offset: number) => {
+  async findAllBooks(limit: number | null, offset: number): Promise<IRows> {
     try {
       const query = {
         text: qyPaginateBook,
@@ -32,12 +33,12 @@ export const BookModel = {
         return { rows: results.rows, totalResults };
       }
     } catch (err) {
-      console.error('Error al ejecutar la consulta en el modelo', err);
+      console.error('Error al ejecutar la consulta en el modelo');
       throw err;
     }
   },
 
-  findById: async (id: string) => {
+  async findById(id: string): Promise<IBook[] | null> {
     try {
       const result = await pool.query(qyOneBook, [id]);
 
@@ -47,12 +48,12 @@ export const BookModel = {
 
       return result.rows[0];
     } catch (err) {
-      console.error('Error al leer un libro en el modelo', err);
+      console.error('Error al leer un libro en el modelo');
       throw err;
     }
   },
 
-  findBySlug: async (slug: string) => {
+  async findBySlug(slug: string): Promise<IBook[] | null> {
     try {
       const result = await pool.query(qyOneBookBySlug, [slug]);
 
@@ -62,12 +63,12 @@ export const BookModel = {
 
       return result.rows[0];
     } catch (err) {
-      console.error('Error al leer un libro en el modelo', err);
+      console.error('Error al leer un libro en el modelo');
       throw err;
     }
   },
 
-  findSearch: async (title: string | string[] | undefined) => {
+  async findSearch(title: string | string[] | undefined): Promise<IBook[]> {
     try {
       const result = await pool.query(qySearchByField, [`%${title}%`]);
 
@@ -77,12 +78,12 @@ export const BookModel = {
 
       return result.rows;
     } catch (err) {
-      console.error('Error al leer un libro en el modelo', err);
+      console.error('Error al leer un libro en el modelo');
       throw err;
     }
   },
 
-  findByGroupFields: async () => {
+  async findByGroupFields(): Promise<IBook[]> {
     try {
       const result = await pool.query(qyGroupFields);
 
@@ -92,12 +93,12 @@ export const BookModel = {
 
       return result.rows;
     } catch (err) {
-      console.error('Error al leer los grupos en el modelo', err);
+      console.error('Error al leer los grupos en el modelo');
       throw err;
     }
   },
 
-  findUpdateBook: async (values: any[]) => {
+  async findUpdateBook(values: any[]): Promise<IBook[]> {
     try {
       const result = await pool.query(qyPatchBook, values);
 
@@ -107,23 +108,23 @@ export const BookModel = {
 
       return result.rows;
     } catch (err) {
-      console.error('Error al leer un libro en el modelo', err);
+      console.error('Error al leer un libro en el modelo');
       throw err;
     }
   },
 
-  createBook: async (values: any[]) => {
+  async createBook(values: any[]): Promise<IBook[]> {
     try {
       const result = await pool.query(qyCreateBook, values);
 
-      return result.rowCount;
+      return result.rows;
     } catch (err) {
-      console.error('Error al leer un libro en el modelo', err);
+      console.error('Error al leer un libro en el modelo');
       throw err;
     }
   },
 
-  deleteBook: async (id: string) => {
+  async deleteBook(id: string): Promise<IBook[] | null> {
     try {
       const result = await pool.query(qyDeleteBook, [id]);
 
@@ -133,7 +134,7 @@ export const BookModel = {
 
       return result.rows[0];
     } catch (err) {
-      console.error('Error al leer un libro en el modelo', err);
+      console.error('Error al leer un libro en el modelo');
       throw err;
     }
   },

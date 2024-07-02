@@ -4,7 +4,12 @@ import books from '../api/routes/books';
 
 function getHome(req: Request, res: Response) {
   try {
-    return res.status(200).json({ API: 'http://localhost:6985/api/books' });
+    return res.status(200).json({
+      architecture: {
+        rest: { 'API REST': `${req.protocol}://${req.get('host')}/api/books`, docs: '' },
+        // rpc: { 'API RPC': `${req.protocol}://${req.get('host')}/api/books`, docs: '' }
+      }
+    });
   } catch (error) {
     throw error;
   }
@@ -12,7 +17,7 @@ function getHome(req: Request, res: Response) {
 
 function getRedirect(req: Request, res: Response) {
   try {
-    return res.status(200).redirect('/api/books');
+    return res.status(200).redirect('/');
   } catch (error) {
     throw error;
   }

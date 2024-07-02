@@ -1,4 +1,4 @@
-interface bookType {
+export interface IBook {
   title: string;
   authors: string[];
   synopsis: string;
@@ -13,4 +13,9 @@ interface bookType {
     url: string;
     public_id: string;
   };
+}
+
+export type IRows = {
+  rows: IBook[];
+  totalResults?: number;
 }

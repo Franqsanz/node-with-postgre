@@ -1,4 +1,5 @@
-import { BookModel } from '../model/bookModel';
+import { BookModel } from '../models/bookModel';
+import { IBook, IRows } from '../types/IBook';
 
 const {
   findAllBooks,
@@ -12,7 +13,7 @@ const {
 } = BookModel;
 
 export const BookService = {
-  async findAllBooks(limit: number | null, offset: number) {
+  async findAllBooks(limit: number | null, offset: number): Promise<IRows> {
     try {
       return await findAllBooks(limit, offset);
     } catch (err) {
@@ -20,7 +21,7 @@ export const BookService = {
     }
   },
 
-  async findById(id: string) {
+  async findById(id: string): Promise<IBook[] | null> {
     try {
       return await findById(id);
     } catch (error) {
@@ -28,7 +29,7 @@ export const BookService = {
     }
   },
 
-  async findBySlug(slug: string) {
+  async findBySlug(slug: string): Promise<IBook[] | null> {
     try {
       return await findBySlug(slug);
     } catch (error) {
@@ -36,7 +37,7 @@ export const BookService = {
     }
   },
 
-  async findSearch(title: string | string[] | undefined) {
+  async findSearch(title: string | string[] | undefined): Promise<IBook[]> {
     try {
       return await findSearch(title);
     } catch (error) {
@@ -44,7 +45,7 @@ export const BookService = {
     }
   },
 
-  async findByGroupFields() {
+  async findByGroupFields(): Promise<IBook[]> {
     try {
       return await findByGroupFields();
     } catch (error) {
@@ -52,7 +53,7 @@ export const BookService = {
     }
   },
 
-  async findUpdateBook(values: any[]) {
+  async findUpdateBook(values: any[]): Promise<IBook[]> {
     try {
       // const values = Object.values(params);
 
@@ -62,7 +63,7 @@ export const BookService = {
     }
   },
 
-  async createBook(values: any[]) {
+  async createBook(values: any[]): Promise<IBook[]> {
     try {
       // const values = Object.values(params);
 
@@ -72,7 +73,7 @@ export const BookService = {
     }
   },
 
-  async deleteBook(id: string) {
+  async deleteBook(id: string): Promise<IBook[] | null> {
     try {
       return await deleteBook(id);
     } catch (error) {

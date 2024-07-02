@@ -52,7 +52,7 @@ async function getOneBook(req: Request, res: Response) {
   try {
     const result = await findById(id);
 
-    if (result.length === 0) {
+    if (!result || result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
@@ -69,7 +69,7 @@ async function getOneBookBySlug(req: Request, res: Response) {
   try {
     const result = await findBySlug(slug);
 
-    if (result.length === 0) {
+    if (!result || result.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
@@ -202,7 +202,7 @@ async function removeBook(req: Request, res: Response) {
   try {
     const result = await deleteBook(id);
 
-    if (result === 0) {
+    if (result?.length === 0) {
       return res.status(404).json({ message: 'Libro no encontrado' });
     }
 
