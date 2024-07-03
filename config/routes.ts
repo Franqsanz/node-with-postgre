@@ -6,8 +6,8 @@ function getHome(req: Request, res: Response) {
   try {
     return res.status(200).json({
       architecture: {
-        rest: { 'API REST': `${req.protocol}://${req.get('host')}/api/books`, docs: '' },
-        // rpc: { 'API RPC': `${req.protocol}://${req.get('host')}/api/books`, docs: '' }
+        REST: { 'API': `${req.protocol}://${req.get('host')}/api/books`, docs: '' },
+        // RPC: { 'API': `${req.protocol}://${req.get('host')}/api/books`, docs: '' }
       }
     });
   } catch (error) {

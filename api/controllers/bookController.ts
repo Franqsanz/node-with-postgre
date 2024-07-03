@@ -41,7 +41,7 @@ async function getAllBooks(req: Request, res: Response) {
       });
     }
   } catch (err) {
-    console.error('Error al ejecutar la consulta', err);
+    console.error('Error al ejecutar la consulta');
     res.status(500).json({ message: 'Error al obtener los libros' });
   }
 }
@@ -58,7 +58,7 @@ async function getOneBook(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al leer un libro', err);
+    console.error('Error al leer un libro');
     res.status(500).json({ message: 'Error al leer un libro' });
   }
 }
@@ -75,7 +75,7 @@ async function getOneBookBySlug(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al leer un libro', err);
+    console.error('Error al leer un libro');
     res.status(500).json({ message: 'Error al leer un libro' });
   }
 }
@@ -92,7 +92,7 @@ async function getSearchBook(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al leer un libro', err);
+    console.error('Error al leer un libro');
     res.status(500).json({ message: 'Error al leer un libro' });
   }
 }
@@ -107,7 +107,7 @@ async function getGroupFields(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al leer un libro', err);
+    console.error('Error al leer un libro');
     res.status(500).json({ message: 'Error al leer un libro' });
   }
 }
@@ -152,7 +152,7 @@ async function updateBook(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al actualizar el libro', err);
+    console.error('Error al actualizar el libro');
     res.status(500).json({ message: 'Error al actualizar el libro' });
   }
 }
@@ -191,7 +191,7 @@ async function addBook(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al crear un nuevo libro', err);
+    console.error('Error al crear un nuevo libro');
     res.status(500).json({ message: 'Error al crear un nuevo libro' });
   }
 }
@@ -208,7 +208,7 @@ async function removeBook(req: Request, res: Response) {
 
     return res.status(200).json({ message: 'Libro eliminado correctamente', book: result });
   } catch (err) {
-    console.error('Error al eliminar el libro', err);
+    console.error('Error al eliminar el libro');
     res.status(500).json({ message: 'Error al eliminar el libro' });
   }
 }
