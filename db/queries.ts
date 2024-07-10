@@ -98,6 +98,20 @@ const qyTotalCount = `SELECT COUNT(*) FROM books`;
 // permitiendo que las condiciones adicionales se agreguen fácilmente
 // con `AND` sin preocuparse por si hay una condición previa.
 const qyFilter = `SELECT id, image, title, authors, category, language, year, slug FROM books WHERE 1=1`;
+// Busca todos los libros que haya publicado un usuario
+const qyUserFindBooks = `SELECT
+    u.id AS id,
+    u.name,
+    COUNT(b.id)::integer AS cantidad_libros
+  FROM
+    users u
+  LEFT JOIN
+    books b ON u.id::text = b.user_id
+  GROUP BY
+    u.id, u.name
+  ORDER BY
+    cantidad_libros DESC;
+`;
 
 export {
   qyCreateBook,
@@ -112,5 +126,6 @@ export {
   qySearchByFields,
   qyGroupFields,
   qyTotalCount,
-  qyFilter
+  qyFilter,
+  qyUserFindBooks
 }
