@@ -1,11 +1,19 @@
 import { UserModel } from '../models/userModel';
 
-const { userFindBooks } = UserModel;
+const { userFind, userFindAllBooksDetails } = UserModel;
 
 export const UserService = {
   async findAll() {
     try {
-      return await userFindBooks();
+      return await userFind();
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async findAllUsersBooksDetails() {
+    try {
+      return await userFindAllBooksDetails();
     } catch (err) {
       throw err;
     }

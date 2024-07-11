@@ -1,13 +1,16 @@
 import { Request, Response } from 'express';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
-import { allBooks } from './methods/methods';
+import { findAll, findOne } from './methods/methods';
 
 const server = new JSONRPCServer();
 
 // Define los métodos RPC
 server.addMethod('books', ({ limit, page }) => {
-  return allBooks(limit, page);
+  return findAll(limit, page);
+});
+server.addMethod('bookOne', ({ id }) => {
+  return findOne(id);
 });
 
 export function jsonRpc(req: Request, res: Response) {

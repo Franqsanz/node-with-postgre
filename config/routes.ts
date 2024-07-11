@@ -7,15 +7,22 @@ import { jsonRpc } from '../json_rpc/server';
 function getHome(req: Request, res: Response) {
   return res.status(200).json({
     architecture: {
-      REST: { 'API': `${req.protocol}://${req.get('host')}/api/books`, docs: '' },
+      REST: { 'API': `${req.protocol}://${req.get('host')}/api/rest`, docs: '' },
       RPC: { 'API': `${req.protocol}://${req.get('host')}/api/rpc`, docs: '' }
     }
   });
 }
 
+function getHomeRest(req: Request, res: Response) {
+  return res.status(200).json({
+    books: `${req.protocol}://${req.get('host')}/api/rest/books`,
+    users: `${req.protocol}://${req.get('host')}/api/rest/users`,
+  });
+}
+
 function getHomeRpc(req: Request, res: Response) {
   return res.status(200).json({
-    message: "para poder acceder a la api RPC debes usar un cliente http por ejemplo postman, usando el metodo POST."
+    message: "Para poder acceder a la API JSON-RPC debes usar un cliente HTTP por ejemplo postman, usando el metodo POST."
   });
 }
 
@@ -39,8 +46,9 @@ export function configRoutes(route: Application) {
   // REST
   route.get('/', getHome);
   route.get('/api', getRedirect);
-  route.use('/api', books);
-  route.use('/api', user);
+  route.get('/api/rest', getHomeRest);
+  route.use('/api/rest/books', books);
+  route.use('/api/rest/users', user);
   // RPC
   route.get('/api/rpc', getHomeRpc);
   route.post('/api/rpc', jsonRpc);

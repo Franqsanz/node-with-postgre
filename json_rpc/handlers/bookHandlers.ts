@@ -1,6 +1,6 @@
 import { BookService } from '../../services/bookService';
 
-export async function getAllBooks(limit: number, page: number) {
+export async function findAllBooks(limit: number, page: number) {
   const offset = limit ? (page - 1) * limit : 0;
 
   try {
@@ -26,7 +26,22 @@ export async function getAllBooks(limit: number, page: number) {
       };
     }
   } catch (err) {
-    console.error('Error al ejecutar la consulta', err);
+    console.error('Error al ejecutar la consulta');
     throw new Error('Error al obtener los libros');
+  }
+}
+
+export async function findById(id: string) {
+  try {
+    const result = await BookService.findById(id);
+
+    if (!result || result.length === 0) {
+      throw new Error('Libro no encontrado');
+    }
+
+    return result;
+  } catch (err) {
+    console.error('Error al leer un libro');
+    throw new Error('Error al obtener el libro');
   }
 }

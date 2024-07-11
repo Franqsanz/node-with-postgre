@@ -98,11 +98,11 @@ const qyTotalCount = `SELECT COUNT(*) FROM books`;
 // permitiendo que las condiciones adicionales se agreguen fácilmente
 // con `AND` sin preocuparse por si hay una condición previa.
 const qyFilter = `SELECT id, image, title, authors, category, language, year, slug FROM books WHERE 1=1`;
-// Busca todos los libros que haya publicado un usuario
-const qyUserFindBooks = `SELECT
+// Consulta todos los usuarios con la cantidad de libros que haya publicado.
+const qyUserFind = `SELECT
     u.id AS id,
     u.name,
-    COUNT(b.id)::integer AS cantidad_libros
+    COUNT(b.id)::integer AS total_books
   FROM
     users u
   LEFT JOIN
@@ -110,7 +110,49 @@ const qyUserFindBooks = `SELECT
   GROUP BY
     u.id, u.name
   ORDER BY
-    cantidad_libros DESC;
+    total_books DESC;
+`;
+
+const qyUserFindDetailsBooks = `SELECT
+    u.id AS id,
+    u.name,
+    COUNT(b.id)::integer AS total_books,
+  COALESCE(json_agg(
+    json_build_object(
+      'id', b.id,
+      'title', b.title
+    )
+  ) FILTER (WHERE b.id IS NOT NULL), '[]') AS books
+  FROM
+    users u
+  LEFT JOIN
+    books b ON u.id::text = b.user_id
+  GROUP BY
+    u.id, u.name
+  ORDER BY
+    total_books DESC;
+`;
+
+const qyFindOneUserAndBooks = `SELECT
+    u.id AS id,
+    u.name,
+    COUNT(b.id)::integer AS total_books,
+  COALESCE(json_agg(
+    json_build_object(
+      'id', b.id,
+      'title', b.title
+    )
+  ) FILTER (WHERE b.id IS NOT NULL), '[]') AS books
+  FROM
+    users u
+  LEFT JOIN
+    books b ON u.id::text = b.user_id
+  WHERE
+    u.id = $1
+  GROUP BY
+    u.id, u.name
+  ORDER BY
+    total_books DESC;
 `;
 
 export {
@@ -127,5 +169,6 @@ export {
   qyGroupFields,
   qyTotalCount,
   qyFilter,
-  qyUserFindBooks
+  qyUserFind,
+  qyUserFindDetailsBooks
 }

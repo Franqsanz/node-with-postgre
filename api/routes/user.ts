@@ -1,9 +1,10 @@
 import express from 'express';
 
-import { getUserFindBooks } from '../controllers/userController';
+import { getUserFindBooks, getUserFindBooksDetails } from '../controllers/userController';
 
 const router = express.Router();
 
-router.get('/user', getUserFindBooks);
+router.get('/', getUserFindBooks);
+router.get('/details', getUserFindBooksDetails);
 
 export default router;
