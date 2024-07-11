@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
 import { findAll, findOne } from './methods/methods';
+import './tcp/server_tcp';
 
 const server = new JSONRPCServer();
 
@@ -9,6 +10,7 @@ const server = new JSONRPCServer();
 server.addMethod('books', ({ limit, page }) => {
   return findAll(limit, page);
 });
+
 server.addMethod('bookOne', ({ id }) => {
   return findOne(id);
 });

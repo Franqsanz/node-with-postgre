@@ -10,8 +10,8 @@ export async function getUserFindBooks(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al leer un libro');
-    res.status(500).json({ message: 'Error al leer un libro' });
+    console.error('Error al leer los usuarios');
+    res.status(500).json({ message: 'Error al leer los usuarios' });
   }
 }
 
@@ -21,7 +21,7 @@ export async function getUserFindBooksDetails(req: Request, res: Response) {
 
     return res.status(200).json(result);
   } catch (err) {
-    console.error('Error al leer un libro');
-    res.status(500).json({ message: 'Error al leer un libro' });
+    console.error('Error al leer los usuarios');
+    res.status(500).json({ message: 'Error al leer los usuarios' });
   }
 }
