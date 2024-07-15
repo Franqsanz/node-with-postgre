@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev -r dotenv/config server.ts",
     "start": "node -r dotenv/config dist/server.js",
+    "tcp_start": "ts-node-dev -r dotenv/config json_rpc/tcp/server_tcp.ts",
     "build": "tsc -p ."
   },
   "keywords": [],

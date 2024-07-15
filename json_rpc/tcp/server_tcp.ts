@@ -22,7 +22,6 @@ const tcpServer = net.createServer((socket) => {
       const response = await server.receive(request);
 
       if (response) {
-        console.log(response);
         socket.write(JSON.stringify(response) + '\n');
       }
     } catch (error) {
@@ -35,5 +34,3 @@ const tcpServer = net.createServer((socket) => {
 tcpServer.listen(4040, () => {
   console.log(`TCP server running on port 4040`);
 });
-
-module.exports = tcpServer;
