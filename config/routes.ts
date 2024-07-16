@@ -2,7 +2,7 @@ import { Request, Response, Application } from 'express';
 
 import books from '../api/routes/books';
 import user from '../api/routes/user';
-import { jsonRpc } from '../json_rpc/server';
+import { jsonRpc } from '../json_rpc/http/server';
 
 function getHome(req: Request, res: Response) {
   return res.status(200).json({
@@ -22,7 +22,7 @@ function getHomeRest(req: Request, res: Response) {
 
 function getHomeRpc(req: Request, res: Response) {
   return res.status(200).json({
-    message: "Para poder acceder a la API JSON-RPC debes usar un cliente HTTP por ejemplo postman, usando el metodo POST."
+    message: "To access the JSON-RPC API you must use an HTTP client such as Postman, using the POST method. It is also possible to connect via TCP using for example Ncat."
   });
 }
 

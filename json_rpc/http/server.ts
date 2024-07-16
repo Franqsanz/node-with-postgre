@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
-import { findAll, findOne } from './methods/methods';
+import { findAll, findOne } from '../methods/methods';
 
 const server = new JSONRPCServer();
 

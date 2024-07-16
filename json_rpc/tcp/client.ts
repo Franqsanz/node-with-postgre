@@ -26,6 +26,7 @@ client.connect(4040, '127.0.0.1', () => {
 });
 
 client.on('data', (data) => {
+  console.log(`Received: ${data}`);
   client.destroy(); // Cerrar la conexión una vez recibida la respuesta
 });
 

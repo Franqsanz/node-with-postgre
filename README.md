@@ -56,6 +56,8 @@ Endpoints:
 
 ### Architecture RPC (JSON RPC)
 
+What is this? you can read the [specifications](https://www.jsonrpc.org/specification).
+
 #### HTTP Protocol
 
 The consumption of the `JSON RPC` is through the `POST` method.
@@ -65,7 +67,7 @@ Example:
 ```json
 {
   "jsonrpc": "2.0",
-  "id": 2,
+  "id": 1,
   "method": "books",
   "params": {
     "limit": null,
@@ -79,7 +81,7 @@ Result:
 ```json
 {
   "jsonrpc": "2.0",
-  "id": 2,
+  "id": 1,
   "result": [
     {
       "total": 6,
@@ -93,14 +95,14 @@ Result:
 
 #### TCP Protocol
 
-One way to connect to the TCP server is by using [ncat](https://nmap.org/ncat/).
+One way to connect to the TCP server is by using [Ncat](https://nmap.org/ncat/).
 
 Run server:
 
 ```sh
-node --run tcp_start
+node --run tcp:dev
 # or
-pnpm run tcp_start
+pnpm run tcp:dev
 ```
 
 Example:
@@ -111,5 +113,5 @@ ncat 127.0.0.1 4040
 ```
 
 ```json
-{"jsonrpc": "2.0","id": 2,"method":"books","params": {"limit": null,"page": null}}
+{"jsonrpc": "2.0", "id": 1, "method": "books", "params": { "limit": null, "page": null }}
 ```

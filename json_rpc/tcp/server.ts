@@ -2,7 +2,6 @@ import { JSONRPCServer } from 'json-rpc-2.0';
 import net from 'node:net';
 
 import { findAll, findOne } from '../methods/methods';
-import './client';
 
 const server = new JSONRPCServer();
 
@@ -17,16 +16,32 @@ server.addMethod('bookOne', ({ id }) => {
 const tcpServer = net.createServer((socket) => {
   socket.on('data', async (data) => {
     try {
-      const request = JSON.parse(data.toString());
+      console.log('Request:', data.toString());
 
+      const request = JSON.parse(data.toString());
       const response = await server.receive(request);
 
       if (response) {
-        socket.write(JSON.stringify(response) + '\n');
+        return socket.write(JSON.stringify(response) + '\n');
       }
     } catch (error) {
       console.error('Invalid JSON:', error);
-      socket.write(JSON.stringify({ jsonrpc: '2.0', error: { code: -32700, message: 'Parse error' } }) + '\n');
+      return socket.write(JSON.stringify({
+        jsonrpc: '2.0',
+        error: {
+          code: -32700,
+          message: 'Parse error'
+        }
+      }) + '\n');
+    }
+  });
+
+  socket.on('error', (err) => {
+    if (err.name !== 'EADDRINUSE' && err.name !== 'EACCES') {
+      console.log('Error EADDRINUSE');
+      // setTimeout(() => {
+      //   console.log('Restarting server...');
+      // }, 1000); // Esperar un segundo antes de intentar reiniciar
     }
   });
 });

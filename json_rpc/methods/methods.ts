@@ -1,12 +1,12 @@
-// import { Request, Response } from 'express';
-
-import { findAllBooks, findById } from '../handlers/bookHandlers'
+import { findAllBooks, findById } from '../controllers/bookController'
 
 // Definir las funciones de los métodos
-export function findAll(limit: number, page: number) {
+function findAll(limit: number, page: number) {
   return findAllBooks(limit, page)
 }
 
-export function findOne(id: string) {
+function findOne(id: string) {
   return findById(id)
 }
+
+export { findAll, findOne }
