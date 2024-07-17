@@ -4,7 +4,7 @@ import {
   getAllBooks,
   getOneBook,
   getOneBookBySlug,
-  updateBook,
+  update,
   addBook,
   removeBook,
   getSearchBook,
@@ -19,7 +19,7 @@ router.get('/search', getSearchBook);
 router.get('/group', getGroupFields);
 router.get('/:id', getOneBook);
 router.get('/slug/:slug', getOneBookBySlug);
-router.patch('/:id', updateBook);
+router.patch('/:id', update);
 router.post('/', addBook);
 router.delete('/:id', removeBook);
 

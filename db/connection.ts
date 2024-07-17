@@ -1,22 +1,25 @@
 import { Pool } from 'pg';
-import { config } from 'dotenv';
 
-config();
+const { DB_USER, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT } = process.env;
 
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT as string),
+  user: DB_USER,
+  host: DB_HOST,
+  database: DB_NAME,
+  password: DB_PASSWORD,
+  port: parseInt(DB_PORT as string),
 });
 
 async function connect() {
+  const client = await pool.connect();
+
   try {
-    const res = await pool.query(`SELECT NOW()`);
+    const res = await client.query(`SELECT NOW()`);
     console.log('Conexión exitosa a la base de datos:', res.rows[0].now);
   } catch (err) {
-    console.error('Error al conectar a la base de datos', err);
+    console.log('Error al conectar a la base de datos', err);
+  } finally {
+    client.release();
   }
 }
 

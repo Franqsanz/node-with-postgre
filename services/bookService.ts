@@ -1,83 +1,36 @@
-import { BookModel } from '../models/bookModel';
-import { IBook, IRows } from '../types/IBook';
+import { BookRepository } from '../repositories/bookRepository';
+import { IRepository } from '../interfaces/IRepository';
 
-const {
-  findAllBooks,
-  findById,
-  findBySlug,
-  findSearch,
-  findByGroupFields,
-  findUpdateBook,
-  createBook,
-  deleteBook
-} = BookModel;
-
-export const BookService = {
-  async findAllBooks(limit: number | null, offset: number): Promise<IRows> {
-    try {
-      return await findAllBooks(limit, offset);
-    } catch (err) {
-      throw err;
-    }
+export const BookService: IRepository = {
+  async findAllBooks(limit, offset) {
+    return await BookRepository.findAllBooks(limit, offset);
   },
 
-  async findById(id: string): Promise<IBook[] | null> {
-    try {
-      return await findById(id);
-    } catch (error) {
-      throw error;
-    }
+  async findById(id) {
+    return await BookRepository.findById(id);
   },
 
-  async findBySlug(slug: string): Promise<IBook[] | null> {
-    try {
-      return await findBySlug(slug);
-    } catch (error) {
-      throw error;
-    }
+  async findBySlug(slug) {
+    return await BookRepository.findBySlug(slug);
   },
 
-  async findSearch(title: string | string[] | undefined): Promise<IBook[]> {
-    try {
-      return await findSearch(title);
-    } catch (error) {
-      throw error;
-    }
+  async findSearch(title) {
+    return await BookRepository.findSearch(title);
   },
 
-  async findByGroupFields(): Promise<IBook[]> {
-    try {
-      return await findByGroupFields();
-    } catch (error) {
-      throw error;
-    }
+  async findByGroupFields() {
+    return await BookRepository.findByGroupFields();
   },
 
-  async findUpdateBook(values: any[]): Promise<IBook[]> {
-    try {
-      // const values = Object.values(params);
-
-      return await findUpdateBook(values);
-    } catch (error) {
-      throw error;
-    }
+  async updateBook(values) {
+    return await BookRepository.updateBook(values);
   },
 
-  async createBook(values: any[]): Promise<IBook[]> {
-    try {
-      // const values = Object.values(params);
-
-      return await createBook(values);
-    } catch (error) {
-      throw error;
-    }
+  async createBook(values) {
+    return await BookRepository.createBook(values);
   },
 
-  async deleteBook(id: string): Promise<IBook[] | null> {
-    try {
-      return await deleteBook(id);
-    } catch (error) {
-      throw error;
-    }
+  async deleteBook(id) {
+    return await BookRepository.deleteBook(id);
   },
 };

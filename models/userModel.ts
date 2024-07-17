@@ -1,5 +1,5 @@
 import pool from '../db/connection';
-import { IBook, IRows } from '../types/IBook';
+import { IBook, IRows } from '../interfaces/IBook';
 import { qyUserFind, qyUserFindDetailsBooks } from '../db/queries';
 
 export const UserModel = {

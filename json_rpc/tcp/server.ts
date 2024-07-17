@@ -24,8 +24,8 @@ const tcpServer = net.createServer((socket) => {
       if (response) {
         return socket.write(JSON.stringify(response) + '\n');
       }
-    } catch (error) {
-      console.error('Invalid JSON:', error);
+    } catch (err) {
+      console.error('Invalid JSON:', err);
       return socket.write(JSON.stringify({
         jsonrpc: '2.0',
         error: {

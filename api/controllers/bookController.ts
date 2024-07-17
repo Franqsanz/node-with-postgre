@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { BookService } from '../../services/bookService';
+import { IBook } from '../../interfaces/IBook';
 
 const {
   findAllBooks,
@@ -8,7 +9,7 @@ const {
   findBySlug,
   findSearch,
   findByGroupFields,
-  findUpdateBook,
+  updateBook,
   createBook,
   deleteBook
 } = BookService;
@@ -112,51 +113,6 @@ async function getGroupFields(req: Request, res: Response) {
   }
 }
 
-async function updateBook(req: Request, res: Response) {
-  const { id } = req.params;
-  const {
-    title,
-    authors,
-    synopsis,
-    category,
-    source_link,
-    language,
-    year,
-    number_pages,
-    format,
-    slug,
-    image
-  } = req.body;
-
-  const values = [
-    title,
-    authors,
-    synopsis,
-    category,
-    source_link,
-    language,
-    year,
-    number_pages,
-    format,
-    slug,
-    image,
-    id
-  ];
-
-  try {
-    const result = await findUpdateBook(values);
-
-    if (result.length === 0) {
-      return res.status(404).json({ message: 'Libro no encontrado' });
-    }
-
-    return res.status(200).json(result);
-  } catch (err) {
-    console.error('Error al actualizar el libro');
-    res.status(500).json({ message: 'Error al actualizar el libro' });
-  }
-}
-
 async function addBook(req: Request, res: Response) {
   const {
     title,
@@ -172,7 +128,7 @@ async function addBook(req: Request, res: Response) {
     image
   } = req.body;
 
-  const values = [
+  const values: IBook[] = [
     title,
     authors,
     synopsis,
@@ -193,6 +149,51 @@ async function addBook(req: Request, res: Response) {
   } catch (err) {
     console.error('Error al crear un nuevo libro');
     res.status(500).json({ message: 'Error al crear un nuevo libro' });
+  }
+}
+
+async function update(req: Request, res: Response) {
+  const { id } = req.params;
+  const {
+    title,
+    authors,
+    synopsis,
+    category,
+    source_link,
+    language,
+    year,
+    number_pages,
+    format,
+    slug,
+    image
+  } = req.body;
+
+  const values: IBook[] = [
+    title,
+    authors,
+    synopsis,
+    category,
+    source_link,
+    language,
+    year,
+    number_pages,
+    format,
+    slug,
+    image,
+    id
+  ];
+
+  try {
+    const result = await updateBook(values);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: 'Libro no encontrado' });
+    }
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('Error al actualizar el libro');
+    res.status(500).json({ message: 'Error al actualizar el libro' });
   }
 }
 
@@ -217,7 +218,7 @@ export {
   getAllBooks,
   getOneBook,
   getOneBookBySlug,
-  updateBook,
+  update,
   addBook,
   removeBook,
   getSearchBook,

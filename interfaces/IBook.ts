@@ -5,10 +5,10 @@ export interface IBook {
   category: string[];
   year: number;
   language: number;
-  sourceLink: string;
-  numberPages: string;
+  source_link: string;
+  number_pages: string;
   format: string;
-  pathUrl: string;
+  slug: string;
   image: {
     url: string;
     public_id: string;
