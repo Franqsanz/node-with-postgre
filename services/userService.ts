@@ -1,21 +1,12 @@
-import { UserModel } from '../models/userModel';
+import { IReadUser } from '../interfaces/IRepository';
+import { UserRepository } from '../repositories/userRepository';
 
-const { userFind, userFindAllBooksDetails } = UserModel;
-
-export const UserService = {
-  async findAll() {
-    try {
-      return await userFind();
-    } catch (err) {
-      throw err;
-    }
+export const UserService: IReadUser = {
+  async findUsers() {
+    return await UserRepository.findUsers();
   },
 
-  async findAllUsersBooksDetails() {
-    try {
-      return await userFindAllBooksDetails();
-    } catch (err) {
-      throw err;
-    }
+  async findUsersBooksDetails() {
+    return await UserRepository.findUsersBooksDetails();
   },
 }

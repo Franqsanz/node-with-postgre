@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 
-import { BookService } from '../../services/bookService';
-import { IBook } from '../../interfaces/IBook';
+import { BookService } from '../../../services/bookService';
+import { IBook } from '../../../interfaces/IBook';
 
 const {
-  findAllBooks,
+  findBooks,
   findById,
   findBySlug,
   findSearch,
@@ -20,7 +20,7 @@ async function getAllBooks(req: Request, res: Response) {
   const offset = limit ? (page - 1) * limit : 0;
 
   try {
-    const { rows, totalResults } = await findAllBooks(limit, offset);
+    const { rows, totalResults } = await findBooks(limit, offset);
 
     if (limit === null) {
       return res.status(200).json(rows);

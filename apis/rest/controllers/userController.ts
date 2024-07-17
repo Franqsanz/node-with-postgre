@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 
-import { UserService } from '../../services/userService';
+import { UserService } from '../../../services/userService';
 
-const { findAll, findAllUsersBooksDetails } = UserService;
+const { findUsers, findUsersBooksDetails } = UserService;
 
 export async function getUserFindBooks(req: Request, res: Response) {
   try {
-    const result = await findAll();
+    const result = await findUsers();
 
     return res.status(200).json(result);
   } catch (err) {
@@ -17,7 +17,7 @@ export async function getUserFindBooks(req: Request, res: Response) {
 
 export async function getUserFindBooksDetails(req: Request, res: Response) {
   try {
-    const result = await findAllUsersBooksDetails();
+    const result = await findUsersBooksDetails();
 
     return res.status(200).json(result);
   } catch (err) {

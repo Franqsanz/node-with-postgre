@@ -2,8 +2,8 @@ import { BookRepository } from '../repositories/bookRepository';
 import { IRepository } from '../interfaces/IRepository';
 
 export const BookService: IRepository = {
-  async findAllBooks(limit, offset) {
-    return await BookRepository.findAllBooks(limit, offset);
+  async findBooks(limit, offset) {
+    return await BookRepository.findBooks(limit, offset);
   },
 
   async findById(id) {

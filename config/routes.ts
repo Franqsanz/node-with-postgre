@@ -1,8 +1,8 @@
 import { Request, Response, Application } from 'express';
 
-import books from '../api/routes/books';
-import user from '../api/routes/user';
-import { jsonRpc } from '../json_rpc/http/server';
+import books from '../apis/rest/routes/books';
+import user from '../apis/rest/routes/user';
+import { jsonRpc } from '../apis/json_rpc/http/server';
 
 function getHome(req: Request, res: Response) {
   return res.status(200).json({

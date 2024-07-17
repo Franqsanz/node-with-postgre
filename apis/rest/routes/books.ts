@@ -10,7 +10,7 @@ import {
   getSearchBook,
   getGroupFields
 } from '../controllers/bookController';
-import { query } from '../middleware/query';
+import { query } from '../middlewares/query';
 
 const router = express.Router();
 

@@ -1,10 +1,10 @@
-import { BookService } from '../../services/bookService';
+import { BookService } from '../../../services/bookService';
 
-export async function findAllBooks(limit: number, page: number) {
+export async function findBooks(limit: number, page: number) {
   const offset = limit ? (page - 1) * limit : 0;
 
   try {
-    const { rows, totalResults } = await BookService.findAllBooks(limit, offset);
+    const { rows, totalResults } = await BookService.findBooks(limit, offset);
 
     if (limit === null) {
       return rows;

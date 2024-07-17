@@ -1,9 +1,9 @@
 import pool from '../db/connection';
-import { IBook, IRows } from '../interfaces/IBook';
+import { IReadUser } from '../interfaces/IRepository';
 import { qyUserFind, qyUserFindDetailsBooks } from '../db/queries';
 
-export const UserModel = {
-  async userFind() {
+export const UserRepository: IReadUser = {
+  async findUsers() {
     try {
       const result = await pool.query(qyUserFind);
 
@@ -14,7 +14,7 @@ export const UserModel = {
     }
   },
 
-  async userFindAllBooksDetails() {
+  async findUsersBooksDetails() {
     try {
       const result = await pool.query(qyUserFindDetailsBooks);
 

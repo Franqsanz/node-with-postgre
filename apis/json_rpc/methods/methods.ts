@@ -1,8 +1,8 @@
-import { findAllBooks, findById } from '../controllers/bookController'
+import { findBooks, findById } from '../controllers/bookController'
 
 // Definir las funciones de los métodos
 function findAll(limit: number, page: number) {
-  return findAllBooks(limit, page)
+  return findBooks(limit, page)
 }
 
 function findOne(id: string) {

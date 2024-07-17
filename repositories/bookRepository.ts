@@ -14,7 +14,7 @@ import {
 } from '../db/queries';
 
 export const BookRepository: IRepository = {
-  async findAllBooks(limit, offset) {
+  async findBooks(limit, offset) {
     try {
       const query = {
         text: qyPaginateBook,
