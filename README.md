@@ -8,7 +8,7 @@ This API has two architectures available, one in REST and the other in JSON RPC,
 
 Currently, it looks like this, but it will probably change over time
 
-![Architecture](./architecture.png)
+![Architecture](./architecture.jpg)
 
 ## Getting started
 

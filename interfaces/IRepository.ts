@@ -10,9 +10,9 @@ interface IReadBook {
 }
 
 interface IWrite {
-  createBook(values: IBook[]): Promise<IBook[]>
+  createBook(values: IBook[]): Promise<IBook[]>;
   updateBook(values: IBook[]): Promise<IBook[]>;
-  deleteBook(id: string): Promise<IBook[] | null>
+  deleteBook(id: string): Promise<IBook[] | null>;
 }
 
 interface IReadUser {
