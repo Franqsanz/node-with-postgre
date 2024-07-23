@@ -1,4 +1,4 @@
-import pool from '../db/connection';
+import pool from '../../db/connection';
 import { IRepository } from '../interfaces/IRepository';
 import {
   qyCreateBook,
@@ -11,7 +11,7 @@ import {
   qySearchByField,
   qyGroupFields,
   qyTotalCount,
-} from '../db/queries';
+} from '../../db/queries';
 
 export const BookRepository: IRepository = {
   async findBooks(limit, offset) {

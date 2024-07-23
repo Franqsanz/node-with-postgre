@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-import pool from '../../../db/connection';
-import { qyFilter } from '../../../db/queries';
+import pool from '../../../../db/connection';
+import { qyFilter } from '../../../../db/queries';
 
 export async function query(req: Request, res: Response, next: NextFunction) {
   const { category, year, language } = req.query;

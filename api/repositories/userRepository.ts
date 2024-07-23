@@ -1,6 +1,6 @@
-import pool from '../db/connection';
+import pool from '../../db/connection';
 import { IReadUser } from '../interfaces/IRepository';
-import { qyUserFind, qyUserFindDetailsBooks } from '../db/queries';
+import { qyUserFind, qyUserFindDetailsBooks } from '../../db/queries';
 
 export const UserRepository: IReadUser = {
   async findUsers() {
